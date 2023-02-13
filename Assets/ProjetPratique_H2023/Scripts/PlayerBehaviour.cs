@@ -30,16 +30,12 @@ public class PlayerBehaviour : MonoBehaviour
         m_CanMove = true;
     }
 
-    void FixedUpdate()
-    {
-        Move();
-    }
-
     // Update is called once per frame
     void Update()
     {
-        CameraFollow();
         Inputs();
+        Move();
+        CameraFollow();
         Animate();
     }
 

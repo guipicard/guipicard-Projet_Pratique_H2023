@@ -24,7 +24,7 @@ public class AiBehaviour : MonoBehaviour
     {
         m_NavmeshAgent = GetComponent<NavMeshAgent>();
         m_Animator = GetComponent<Animator>();
-        m_CanMove = false;
+        m_CanMove = true;
         m_Canstab = false;
         m_IsStabing = false;
         m_NavmeshAgent.stoppingDistance = m_attackDistance;
