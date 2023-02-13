@@ -2490,8 +2490,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8bf2bd1b6fb9a04b951e568b3e86884, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  m_Speed: 5
+  player: {fileID: 1483678033756698852, guid: 5c8070429e4267c46a665997a215b848, type: 3}
   m_TriggerDistance: 10
   m_attackDistance: 5
 --- !u!195 &7627248547613452600

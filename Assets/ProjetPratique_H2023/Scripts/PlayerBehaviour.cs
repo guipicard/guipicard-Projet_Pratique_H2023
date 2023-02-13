@@ -101,5 +101,6 @@ public class PlayerBehaviour : MonoBehaviour
     private void CanMoveToggle()
     {
         m_CanMove = !m_CanMove;
+        Debug.Log("Allo");
     }
 }

@@ -60,7 +60,7 @@ ModelImporter:
       curves: []
       events:
       - time: 1
-        functionName: CanMoveToggle
+        functionName: ResetState
         data: 
         objectReferenceParameter: {fileID: 7284581147228509285, guid: 4ec96c6f28ba87147a243f78387626e1, type: 3}
         floatParameter: 0
