@@ -7,6 +7,8 @@ using UnityEngine.ProBuilder.MeshOperations;
 
 public class AiBehaviour : MonoBehaviour
 {
+    public float HP;
+
     [SerializeField] private Transform player;
     private NavMeshAgent m_NavmeshAgent;
     private Animator m_Animator;
@@ -18,15 +20,18 @@ public class AiBehaviour : MonoBehaviour
 
     private bool m_Canstab;
     private bool m_IsStabing;
+    private bool m_Isrotating;
 
     // Start is called before the first frame update
     void Start()
     {
+        HP = 100;
         m_NavmeshAgent = GetComponent<NavMeshAgent>();
         m_Animator = GetComponent<Animator>();
         m_CanMove = true;
         m_Canstab = false;
         m_IsStabing = false;
+        m_Isrotating = false;
         m_NavmeshAgent.stoppingDistance = m_attackDistance;
     }
 
@@ -39,12 +44,10 @@ public class AiBehaviour : MonoBehaviour
         {
             m_IsStabing = true;
             m_Animator.SetTrigger("Stab");
-            Debug.Log("stab");
         }
-        
+
         if (m_PlayerDistance <= m_attackDistance && m_CanMove) // range
         {
-            Debug.Log("Range");
             m_NavmeshAgent.destination = transform.position;
             m_NavmeshAgent.velocity = Vector3.zero;
             m_Canstab = true;
@@ -53,16 +56,27 @@ public class AiBehaviour : MonoBehaviour
         }
         else if (m_PlayerDistance < m_TriggerDistance && m_CanMove) // close
         {
-            Debug.Log("Close");
+            m_Isrotating = true;
             m_NavmeshAgent.destination = player.position;
             m_Animator.SetBool("Running", true);
-            transform.LookAt(player.position);
         }
         else if (m_PlayerDistance > m_TriggerDistance) // far
         {
-            Debug.Log("Far");
+            m_Isrotating = false;
+
             m_NavmeshAgent.destination = transform.position;
             m_Animator.SetBool("Running", false);
+        }
+
+        if (m_Isrotating)
+        {
+            transform.LookAt(player.position);
+        }
+
+        if (HP <= 0)
+        {
+            Destroy(gameObject);
+                
         }
     }
 
@@ -71,6 +85,14 @@ public class AiBehaviour : MonoBehaviour
         m_CanMove = true;
         m_IsStabing = false;
         m_Canstab = false;
-        Debug.Log("toggle");
+    }
+    
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("PlayerProj"))
+        {
+            
+            Destroy(collision.gameObject);
+        }
     }
 }

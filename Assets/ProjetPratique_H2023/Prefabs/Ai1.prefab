@@ -2430,9 +2430,10 @@ GameObject:
   - component: {fileID: 7627248547613452601}
   - component: {fileID: 7627248547613452598}
   - component: {fileID: 7627248547613452600}
+  - component: {fileID: 1093670126569604773}
   m_Layer: 0
   m_Name: Ai1
-  m_TagString: Untagged
+  m_TagString: Ennemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2490,6 +2491,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8bf2bd1b6fb9a04b951e568b3e86884, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HP: 0
   player: {fileID: 1483678033756698852, guid: 5c8070429e4267c46a665997a215b848, type: 3}
   m_TriggerDistance: 10
   m_attackDistance: 5
@@ -2515,6 +2517,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &1093670126569604773
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7284581147228509285}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2.1106827
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.0013458, z: 0}
 --- !u!1 &7494408270706329250
 GameObject:
   m_ObjectHideFlags: 0

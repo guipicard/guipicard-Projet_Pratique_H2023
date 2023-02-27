@@ -6,6 +6,8 @@ using UnityEngine.ProBuilder.MeshOperations;
 
 public class PlayerBehaviour : MonoBehaviour
 {
+    public float HP;
+    
     [SerializeField] private float m_Speed;
     private Rigidbody m_rigidBody;
     private Animator m_Animator;
@@ -13,6 +15,9 @@ public class PlayerBehaviour : MonoBehaviour
     private Camera mainCamera;
     [SerializeField] private Vector3 m_CameraOffset;
 
+    [SerializeField] private GameObject m_Projectile;
+    [SerializeField] private GameObject m_PojectileSpawner;
+    
     // Inputs
     private bool m_LeftInput;
     private bool m_RightInput;
@@ -20,14 +25,20 @@ public class PlayerBehaviour : MonoBehaviour
     private bool m_DownInput;
 
     private bool m_CanMove;
+    private bool m_IsAttacking;
+    
+    // Ray
+    private RaycastHit hitInfo;
+    private Ray screenRay;
 
-    // Start is called before the first frame update
     void Start()
     {
+        HP = 100;
         m_rigidBody = GetComponent<Rigidbody>();
         m_Animator = GetComponent<Animator>();
         mainCamera = Camera.main;
         m_CanMove = true;
+        m_IsAttacking = false;
     }
 
     // Update is called once per frame
@@ -86,17 +97,35 @@ public class PlayerBehaviour : MonoBehaviour
     private void Animate()
     {
         m_Animator.SetBool("Running", m_rigidBody.velocity != Vector3.zero);
-        if (Input.GetKeyDown(KeyCode.Space) && m_CanMove)
-        {
-            m_rigidBody.velocity = Vector3.zero;
-            CanMoveToggle();
-            m_Animator.SetTrigger("Stab");
-        }
+        Attack();
     }
 
     private void CanMoveToggle()
     {
         m_CanMove = !m_CanMove;
-        Debug.Log("Allo");
+    }
+
+    private void Attack()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            screenRay = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(screenRay, out hitInfo))
+            {
+                if (hitInfo.collider.CompareTag("Ennemy"))
+                {
+                    transform.LookAt(hitInfo.collider.transform.position);
+                    m_rigidBody.velocity = Vector3.zero;
+                    m_Animator.SetTrigger("Stab");
+                }
+            }
+        }
+    }
+
+    private void LauchProjectile()
+    {
+        GameObject newProj = Instantiate(m_Projectile);
+        newProj.transform.rotation = transform.localRotation;
+        newProj.transform.position = m_PojectileSpawner.transform.position;
     }
 }

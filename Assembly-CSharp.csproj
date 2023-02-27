@@ -54,6 +54,7 @@
   <ItemGroup>
      <Compile Include="Assets\ProjetPratique_H2023\Scripts\PlayerBehaviour.cs" />
      <Compile Include="Assets\ProjetPratique_H2023\Scripts\AiBehaviour.cs" />
+     <Compile Include="Assets\ProjetPratique_H2023\Scripts\PlayerProjectileScript.cs" />
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity2020.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
  </Reference>
