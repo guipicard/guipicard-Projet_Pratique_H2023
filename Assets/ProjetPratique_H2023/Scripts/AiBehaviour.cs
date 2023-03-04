@@ -7,76 +7,94 @@ using UnityEngine.ProBuilder.MeshOperations;
 
 public class AiBehaviour : MonoBehaviour
 {
+    public float HP = 100;
+
     [SerializeField] private Transform player;
     private NavMeshAgent m_NavmeshAgent;
     private Animator m_Animator;
 
-    private bool m_CanMove;
     private float m_PlayerDistance;
     [SerializeField] private float m_TriggerDistance;
     [SerializeField] private float m_attackDistance;
 
-    private bool m_Canstab;
+    private bool m_IsStabbing;
+    private bool m_OutOfRange;
 
     // Start is called before the first frame update
     void Start()
     {
         m_NavmeshAgent = GetComponent<NavMeshAgent>();
         m_Animator = GetComponent<Animator>();
-        m_CanMove = false;
-        m_Canstab = false;
+        m_IsStabbing = false;
+        m_OutOfRange = true;
     }
 
     // Update is called once per frame
     void Update()
     {
         m_PlayerDistance = Vector3.Distance(player.position, transform.position);
+        StateToggler();
+    }
 
-        if (m_CanMove)
+    private void StateToggler()
+    {
+        if (!m_IsStabbing)
         {
-            Move();
-        }
-        
-        if (m_PlayerDistance < m_attackDistance && m_CanMove)
-        {
-            m_Canstab = true;
-            m_CanMove = false;
-        }
-        else if (m_PlayerDistance < m_TriggerDistance)
-        {
-            m_CanMove = true;
+            if (m_PlayerDistance < m_attackDistance)
+            {
+                Attack();
+            }
+            else if (m_PlayerDistance < m_TriggerDistance)
+            {
+                Move();
+            }
+            else
+            {
+                if (!m_OutOfRange)
+                {
+                    m_OutOfRange = true;
+                    m_NavmeshAgent.SetDestination(transform.position);
+                }
+            }
+            Animate();
         }
         else
         {
-            m_CanMove = false;
             m_NavmeshAgent.SetDestination(transform.position);
+            transform.LookAt(player.position);
         }
-
-        Animate();
     }
 
 
     private void Move()
     {
+        if (m_OutOfRange)
+        {
+            m_OutOfRange = false;
+        }
+
         m_NavmeshAgent.destination = player.position;
-        
-        transform.LookAt(player.position);
+    }
+
+    private void Attack()
+    {
+        if (m_OutOfRange)
+        {
+            m_OutOfRange = false;
+        }
+
+        m_IsStabbing = true;
+        m_NavmeshAgent.velocity = Vector3.zero;
+        m_Animator.SetTrigger("Stab");
     }
 
     private void Animate()
     {
-        if (m_Canstab)
-        {
-            m_NavmeshAgent.velocity = Vector3.zero;
-            m_Animator.SetTrigger("Stab");
-            m_Canstab = false;
-        }
-
         m_Animator.SetBool("Running", m_NavmeshAgent.velocity != Vector3.zero);
     }
 
-    private void CanMoveToggle()
+    private void EndAttack()
     {
-        m_CanMove = false;
+        m_IsStabbing = false;
     }
 }

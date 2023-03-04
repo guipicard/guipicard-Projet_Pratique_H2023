@@ -59,8 +59,15 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
+      - time: 0.17060366
+        functionName: LaunchBasicAttack
+        data: 
+        objectReferenceParameter: {fileID: 2295927488962781790, guid: 5c8070429e4267c46a665997a215b848, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       - time: 1
-        functionName: CanMoveToggle
+        functionName: LaunchBasicAttack
         data: 
         objectReferenceParameter: {fileID: 2295927488962781790, guid: 5c8070429e4267c46a665997a215b848, type: 3}
         floatParameter: 0

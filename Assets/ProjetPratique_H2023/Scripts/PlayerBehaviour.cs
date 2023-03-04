@@ -6,6 +6,8 @@ using UnityEngine.ProBuilder.MeshOperations;
 
 public class PlayerBehaviour : MonoBehaviour
 {
+    [SerializeField] private Transform m_BulletSpawner;
+    [SerializeField] private Transform m_Bullet;
     [SerializeField] private float m_Speed;
     private Rigidbody m_rigidBody;
     private Animator m_Animator;
@@ -21,6 +23,9 @@ public class PlayerBehaviour : MonoBehaviour
 
     private bool m_CanMove;
 
+    private Ray m_MouseRay;
+    private RaycastHit m_HitInfo;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,18 +34,15 @@ public class PlayerBehaviour : MonoBehaviour
         mainCamera = Camera.main;
         m_CanMove = true;
     }
-
-    void FixedUpdate()
-    {
-        Move();
-    }
-
+    
     // Update is called once per frame
     void Update()
     {
         CameraFollow();
         Inputs();
+        Move();
         Animate();
+        Attack();
     }
 
     private void CameraFollow()
@@ -90,12 +92,29 @@ public class PlayerBehaviour : MonoBehaviour
     private void Animate()
     {
         m_Animator.SetBool("Running", m_rigidBody.velocity != Vector3.zero);
-        if (Input.GetKeyDown(KeyCode.Space) && m_CanMove)
+    }
+
+    private void Attack()
+    {
+        if (Input.GetMouseButtonDown(0))
         {
-            m_rigidBody.velocity = Vector3.zero;
-            CanMoveToggle();
-            m_Animator.SetTrigger("Stab");
+            m_MouseRay = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(m_MouseRay, out m_HitInfo))
+            {
+                if (m_HitInfo.collider.CompareTag("Enemy"))
+                {
+                    transform.LookAt(m_HitInfo.collider.transform.position);
+                    m_Animator.SetTrigger("Stab");
+                }
+            }
         }
+    }
+
+    private void LaunchBasicAttack()
+    {
+        Transform newBullet = Instantiate(m_Bullet);
+        newBullet.position = m_BulletSpawner.position;
+        newBullet.rotation = transform.rotation;
     }
 
     private void CanMoveToggle()
