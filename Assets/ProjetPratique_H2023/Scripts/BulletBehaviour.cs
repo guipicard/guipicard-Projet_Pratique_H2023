@@ -7,6 +7,7 @@ public class BulletBehaviour : MonoBehaviour
 {
     [SerializeField] private float m_Speed;
     [SerializeField] private float m_MaxDistance;
+    [SerializeField] private string m_DamageTag;
     
     private float m_SpeedMultiplier;
     private Vector3 m_InitialPosition;
@@ -29,15 +30,14 @@ public class BulletBehaviour : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-
-        if (collision.collider.CompareTag("Enemy"))
+        if (other.gameObject.CompareTag(m_DamageTag))
         {
-            collision.collider.GetComponent<AiBehaviour>().HP -= 10;
+            other.gameObject.GetComponent<AiBehaviour>().HP -= 10;
             Destroy(gameObject);
             
-            Debug.Log(collision.collider.GetComponent<AiBehaviour>().HP);
+            Debug.Log(other.gameObject.GetComponent<AiBehaviour>().HP);
         }
     }
 }
