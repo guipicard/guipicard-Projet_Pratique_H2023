@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CrystalsBehaviour : MonoBehaviour
@@ -10,6 +11,7 @@ public class CrystalsBehaviour : MonoBehaviour
     [SerializeField] private float m_CrystalSpacing;
     [SerializeField] private float m_Bounds;
     [SerializeField] private float m_crystalsHeight;
+    [SerializeField] private GameObject m_AiPrefab;
     private List<Vector2> m_CrystalsPosition;
     private List<Vector2> m_PotentialPosition;
     private float m_Elapsed;
@@ -28,6 +30,7 @@ public class CrystalsBehaviour : MonoBehaviour
         }
 
         GetNewPositions();
+        SpawnAi();
     }
 
     void Update()
@@ -57,7 +60,6 @@ public class CrystalsBehaviour : MonoBehaviour
             Vector2 pos4 = currentCrystal + new Vector2(-m_CrystalSpacing, -m_CrystalSpacing);
             
             Vector2[] surroundingPlacings = {pos1, pos2, pos3, pos4};
-            Debug.Log(surroundingPlacings);
             for (int j = surroundingPlacings.Length - 1; j >= 0; j--)
             {
                 Vector2 pos = surroundingPlacings[j];
@@ -89,5 +91,13 @@ public class CrystalsBehaviour : MonoBehaviour
         
         // Empty Lists
         m_PotentialPosition = new List<Vector2>();
+    }
+
+    private void SpawnAi()
+    {
+        Vector3 lastCrystal = m_CrystalsPosition.Last();
+        GameObject newAi = Instantiate(m_AiPrefab);
+        newAi.transform.position = new Vector3(lastCrystal.x, m_crystalsHeight, lastCrystal.y);
+        newAi.transform.rotation = Quaternion.identity;
     }
 }

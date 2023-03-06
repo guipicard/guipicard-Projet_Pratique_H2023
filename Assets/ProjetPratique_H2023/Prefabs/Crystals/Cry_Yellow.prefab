@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 44113021167915778}
-  m_Layer: 0
+  - component: {fileID: 732579142202988619}
+  m_Layer: 6
   m_Name: Cry_Yellow
   m_TagString: YellowCrystal
   m_Icon: {fileID: 0}
@@ -32,6 +33,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &732579142202988619
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853265156193290680}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 9.381195, y: 10.383859, z: 8.165687}
+  m_Center: {x: -0.029999139, y: 0.6492927, z: 0.65535116}
 --- !u!1 &1222932179037766326
 GameObject:
   m_ObjectHideFlags: 0
@@ -43,7 +57,7 @@ GameObject:
   - component: {fileID: 1895100642806710994}
   - component: {fileID: 2542370710350650050}
   - component: {fileID: 30964551595172823}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Crystals_OBJ.005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +138,7 @@ GameObject:
   - component: {fileID: 9147301173389371435}
   - component: {fileID: 425078443708108352}
   - component: {fileID: 876184716930879465}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Crystals_OBJ.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}

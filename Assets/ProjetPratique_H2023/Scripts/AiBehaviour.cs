@@ -9,7 +9,10 @@ public class AiBehaviour : MonoBehaviour
 {
     public float HP = 100;
 
-    [SerializeField] private Transform player;
+    private GameObject player;
+    [SerializeField] private Transform m_Bullet;
+    [SerializeField] private Transform m_BulletSpawner;
+    [SerializeField] private string m_DamageTag;
     private NavMeshAgent m_NavmeshAgent;
     private Animator m_Animator;
 
@@ -23,6 +26,7 @@ public class AiBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.Find("Player");
         m_NavmeshAgent = GetComponent<NavMeshAgent>();
         m_Animator = GetComponent<Animator>();
         m_IsStabbing = false;
@@ -32,8 +36,12 @@ public class AiBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_PlayerDistance = Vector3.Distance(player.position, transform.position);
+        m_PlayerDistance = Vector3.Distance(player.transform.position, transform.position);
         StateToggler();
+        if (HP <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void StateToggler()
@@ -61,7 +69,7 @@ public class AiBehaviour : MonoBehaviour
         else
         {
             m_NavmeshAgent.SetDestination(transform.position);
-            transform.LookAt(player.position);
+            transform.LookAt(player.transform.position);
         }
     }
 
@@ -73,7 +81,7 @@ public class AiBehaviour : MonoBehaviour
             m_OutOfRange = false;
         }
 
-        m_NavmeshAgent.destination = player.position;
+        m_NavmeshAgent.destination = player.transform.position;
     }
 
     private void Attack()
@@ -92,9 +100,27 @@ public class AiBehaviour : MonoBehaviour
     {
         m_Animator.SetBool("Running", m_NavmeshAgent.velocity != Vector3.zero);
     }
+    
+    private void LaunchBasicAttack()
+    {
+        Transform newBullet = Instantiate(m_Bullet);
+        newBullet.position = m_BulletSpawner.position;
+        newBullet.rotation = transform.rotation;
+    }
 
     private void EndAttack()
     {
         m_IsStabbing = false;
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag(m_DamageTag))
+        {
+            HP -= 10;
+            Destroy(other.gameObject);
+            
+            Debug.Log(HP);
+        }
     }
 }

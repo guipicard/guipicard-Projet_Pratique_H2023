@@ -9,6 +9,9 @@ TagManager:
   - BlueCrystal
   - YellowCrystal
   - GreenCrystal
+  - EnemyBullet
+  - PlayerBullet
+  - Ground
   layers:
   - Default
   - TransparentFX
@@ -16,7 +19,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Crystals
   - 
   - 
   - 
