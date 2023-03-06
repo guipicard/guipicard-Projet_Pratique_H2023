@@ -15,6 +15,8 @@ public class CrystalsBehaviour : MonoBehaviour
     private List<Vector2> m_CrystalsPosition;
     private List<Vector2> m_PotentialPosition;
     private float m_Elapsed;
+    private Ray m_Ray;
+    private RaycastHit m_HitInfo;
 
     void Start()
     {
@@ -67,10 +69,15 @@ public class CrystalsBehaviour : MonoBehaviour
                 {
 
                     // if (pos.x > -m_Bounds && pos.x < m_Bounds && pos.y > -m_Bounds && pos.y < m_Bounds)
-                    if (pos.magnitude < 25.0f)
+                    // if (pos.magnitude < 25.0f)
+                    m_Ray = new Ray(new Vector3(pos.x, m_crystalsHeight, pos.y), Vector3.down);
+                    if (Physics.Raycast(m_Ray, out m_HitInfo, Mathf.Infinity))
                     {
-
-                        m_PotentialPosition.Add(pos);
+                        if (m_HitInfo.collider.CompareTag("Ground"))
+                        {
+                            Debug.Log(m_HitInfo.collider.name);
+                            m_PotentialPosition.Add(pos);
+                        }
                     }
                 }
             }

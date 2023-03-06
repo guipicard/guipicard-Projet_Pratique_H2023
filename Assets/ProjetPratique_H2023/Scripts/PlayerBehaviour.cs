@@ -143,8 +143,6 @@ public class PlayerBehaviour : MonoBehaviour
         {
             HP -= 10;
             Destroy(other.gameObject);
-
-            Debug.Log(HP);
         }
     }
 
