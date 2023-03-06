@@ -26,19 +26,25 @@ public class CrystalsBehaviour : MonoBehaviour
             Vector3 crystalPos = crystal.transform.position;
             m_CrystalsPosition.Add(new Vector2(crystalPos.x, crystalPos.z));
         }
+
+        GetNewPositions();
     }
 
     void Update()
     {
+        if (m_Elapsed == 0.1f)
+        {
+            GetNewPositions();
+        }
         m_Elapsed += Time.deltaTime;
         if (m_Elapsed > m_MuliplieCooldown)
         {
-            Multiplie();
-            m_Elapsed = 0;
+            Multiply();
+            m_Elapsed = 0.1f;
         }
     }
 
-    private void Multiplie()
+    private void GetNewPositions()
     {
         // Add All Potential Places a new Crystal could be
         for (int i = m_CrystalsPosition.Count - 1; i >= 0; i--)
@@ -59,7 +65,7 @@ public class CrystalsBehaviour : MonoBehaviour
                 {
 
                     // if (pos.x > -m_Bounds && pos.x < m_Bounds && pos.y > -m_Bounds && pos.y < m_Bounds)
-                    if (pos.x + pos.y < 25.0f)
+                    if (pos.magnitude < 25.0f)
                     {
 
                         m_PotentialPosition.Add(pos);
@@ -67,7 +73,10 @@ public class CrystalsBehaviour : MonoBehaviour
                 }
             }
         }
-        Debug.Log(m_PotentialPosition.Count);
+    }
+
+    private void Multiply()
+    {
         // Create New Crystals
         foreach (var pos in m_PotentialPosition)
         {
@@ -80,6 +89,5 @@ public class CrystalsBehaviour : MonoBehaviour
         
         // Empty Lists
         m_PotentialPosition = new List<Vector2>();
-        Debug.Log("end");
     }
 }
