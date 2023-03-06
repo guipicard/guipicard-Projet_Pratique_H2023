@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 44113021167915778}
   m_Layer: 0
   m_Name: Cry_Yellow
-  m_TagString: Untagged
+  m_TagString: YellowCrystal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
