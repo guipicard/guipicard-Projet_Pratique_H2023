@@ -75,7 +75,6 @@ public class CrystalsBehaviour : MonoBehaviour
                     {
                         if (m_HitInfo.collider.CompareTag("Ground"))
                         {
-                            Debug.Log(m_HitInfo.collider.name);
                             m_PotentialPosition.Add(pos);
                         }
                     }
