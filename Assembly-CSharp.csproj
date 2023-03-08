@@ -54,9 +54,9 @@
   <ItemGroup>
      <Compile Include="Assets\ProjetPratique_H2023\Scripts\PlayerBehaviour.cs" />
      <Compile Include="Assets\ProjetPratique_H2023\Scripts\BulletBehaviour.cs" />
+     <Compile Include="Assets\ProjetPratique_H2023\Scripts\CrystalPartsBehaviour.cs" />
      <Compile Include="Assets\ProjetPratique_H2023\Scripts\AiBehaviour.cs" />
      <Compile Include="Assets\ProjetPratique_H2023\Scripts\CrystalsBehaviour.cs" />
-     <Compile Include="Assets\ProjetPratique_H2023\Scripts\CrystalPartsBehaviour.cs" />
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
  </Reference>
