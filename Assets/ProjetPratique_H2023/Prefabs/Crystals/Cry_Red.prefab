@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 44113021167915778}
   - component: {fileID: 4159186706530016297}
   - component: {fileID: 7542566723530862421}
+  - component: {fileID: 4152903226886387042}
   m_Layer: 6
   m_Name: Cry_Red
   m_TagString: RedCrystal
@@ -45,8 +46,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 9.381195, y: 10.383859, z: 8.165687}
-  m_Center: {x: -0.029999139, y: 0.6492927, z: 0.65535116}
+  m_Size: {x: 15, y: 8, z: 15}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!208 &7542566723530862421
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -63,6 +64,19 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &4152903226886387042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853265156193290680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a6955bb2f2a1eb45b8f84ffa2884ca8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CrystalParts: {fileID: 1384041697702092640, guid: 8cf6e1f389f5166458450e815c9322b0, type: 3}
 --- !u!1 &1222932179037766326
 GameObject:
   m_ObjectHideFlags: 0

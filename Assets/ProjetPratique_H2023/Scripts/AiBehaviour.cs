@@ -117,8 +117,12 @@ public class AiBehaviour : MonoBehaviour
     {
         if (other.gameObject.CompareTag(m_DamageTag))
         {
-            HP -= 10;
-            Destroy(other.gameObject);
+            HP -= 100;
+            transform.parent.GetComponent<CrystalsBehaviour>().m_AiAlive--;
+            if (HP > 0)
+            {
+                Destroy(other.gameObject);
+            }
         }
     }
 }

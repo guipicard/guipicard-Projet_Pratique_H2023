@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 44113021167915778}
   - component: {fileID: 8312657113817933518}
   - component: {fileID: 8621160294628238453}
+  - component: {fileID: 2325134932892571285}
   m_Layer: 6
   m_Name: Cry_Blue
   m_TagString: BlueCrystal
@@ -61,8 +62,21 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 9.381195, y: 10.383859, z: 8.165687}
-  m_Center: {x: -0.029999139, y: 0.6492927, z: 0.65535116}
+  m_Size: {x: 15, y: 8, z: 15}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2325134932892571285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853265156193290680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a6955bb2f2a1eb45b8f84ffa2884ca8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CrystalParts: {fileID: 1384041697702092640, guid: 2abc54a75a7de634ab348fbc93052bd1, type: 3}
 --- !u!1 &1222932179037766326
 GameObject:
   m_ObjectHideFlags: 0

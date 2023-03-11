@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.PlayerLoop;
 using UnityEngine.ProBuilder.MeshOperations;
+using UnityEngine.UI;
 
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -12,39 +14,90 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private Transform m_Bullet;
 
     [SerializeField] private string m_DamageTag;
-    
+
     private NavMeshAgent m_NavMeshAgent;
     private Animator m_Animator;
 
     private Camera mainCamera;
     [SerializeField] private Vector3 m_CameraOffset;
 
-    // // Inputs
-    // private bool m_LeftInput;
-    // private bool m_RightInput;
-    // private bool m_UpInput;
-    // private bool m_DownInput;
-
     private bool m_CanMove;
 
     private Ray m_MouseRay;
     private RaycastHit m_HitInfo;
-    
+
+    private GameObject m_TargetCrystal;
+
+    public int m_BlueCrystals;
+    public int m_RedCrystals;
+    public int m_YellowCrystals;
+    public int m_GreenCrystals;
+
+    private int m_BlueCrystalsInventory;
+    private int m_RedCrystalsInventory;
+    private int m_YellowCrystalsInventory;
+    private int m_GreenCrystalsInventory;
+
+    [SerializeField] private TextMeshPro m_BlueCrystalsText;
+    [SerializeField] private TextMeshPro m_RedCrystalsText;
+    [SerializeField] private TextMeshPro m_YellowCrystalsText;
+    [SerializeField] private TextMeshPro m_GreenCrystalsText;
+
+    [SerializeField] private Image m_BlueCrystalImage;
+    [SerializeField] private Image m_RedCrystalImage;
+    [SerializeField] private Image m_YellowCrystalImage;
+    [SerializeField] private Image m_GreenCrystalImage;
+
+    [SerializeField] private Canvas m_PlayerCanvas;
+    [SerializeField] private Slider m_HealthBar;
+
     void Start()
     {
         HP = 100.0f;
         m_NavMeshAgent = GetComponent<NavMeshAgent>();
         m_Animator = GetComponent<Animator>();
         mainCamera = Camera.main;
-        m_CanMove = true;
+        m_TargetCrystal = null;
+
+        m_BlueCrystals = 1;
+        m_RedCrystals = 1;
+        m_YellowCrystals = 1;
+        m_GreenCrystals = 1;
+
+        m_BlueCrystalsInventory = 0;
+        m_RedCrystalsInventory = 0;
+        m_YellowCrystalsInventory = 0;
+        m_GreenCrystalsInventory = 0;
+
+        m_BlueCrystalsText.text = m_BlueCrystalsInventory.ToString();
+        m_RedCrystalsText.text = m_RedCrystalsInventory.ToString();
+        m_YellowCrystalsText.text = m_YellowCrystalsInventory.ToString();
+        m_GreenCrystalsText.text = m_GreenCrystalsInventory.ToString();
+
+        ChangeSpellState();
+        UpdateHealthBar();
+        
     }
-    
+
     void Update()
     {
         CameraFollow();
-        Inputs();
         Move();
         Animate();
+        if (m_TargetCrystal != null)
+        {
+            if (Vector3.Distance(transform.position, m_TargetCrystal.transform.position) <= 2.1f)
+            {
+                Mine();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3) && m_GreenCrystalsInventory >= 100)
+        {
+            GreenSpell();
+        }
+        
+        m_PlayerCanvas.transform.LookAt(mainCamera.transform.position);
     }
 
     private void CameraFollow()
@@ -53,43 +106,8 @@ public class PlayerBehaviour : MonoBehaviour
         mainCamera.transform.LookAt(transform.position);
     }
 
-    private void Inputs()
-    {
-        // m_LeftInput = Input.GetKey(KeyCode.A);
-        // m_RightInput = Input.GetKey(KeyCode.D);
-        // m_UpInput = Input.GetKey(KeyCode.W);
-        // m_DownInput = Input.GetKey(KeyCode.S);
-    }
-
     private void Move()
     {
-        // if (m_CanMove)
-        // {
-        //     Vector3 currentVelocity = m_rigidBody.velocity;
-        //     if (m_LeftInput)
-        //     {
-        //         currentVelocity.x = -m_Speed;
-        //     }
-        //
-        //     if (m_RightInput)
-        //     {
-        //         currentVelocity.x = m_Speed;
-        //     }
-        //
-        //     if (m_UpInput)
-        //     {
-        //         currentVelocity.z = m_Speed;
-        //     }
-        //
-        //     if (m_DownInput)
-        //     {
-        //         currentVelocity.z = -m_Speed;
-        //     }
-        //
-        //     m_rigidBody.velocity = currentVelocity;
-        //     transform.LookAt(transform.position + new Vector3(currentVelocity.x, 0, currentVelocity.z));
-        // }
-
         if (Input.GetMouseButtonDown(0))
         {
             m_MouseRay = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -99,15 +117,24 @@ public class PlayerBehaviour : MonoBehaviour
                 {
                     Attack();
                 }
-                else if (m_HitInfo.collider.CompareTag("Ground"))
+
+                if (m_HitInfo.collider.CompareTag("Ground"))
                 {
-                    m_NavMeshAgent.stoppingDistance = 0;
                     transform.LookAt(m_HitInfo.point);
                     m_NavMeshAgent.destination = m_HitInfo.point;
                 }
-                else if (m_HitInfo.collider.gameObject.layer == 6)
+
+                if (m_HitInfo.collider.gameObject.layer == 6)
                 {
-                    Mine();
+                    m_NavMeshAgent.stoppingDistance = 2.0f;
+                    transform.LookAt(m_HitInfo.collider.transform.position);
+                    m_NavMeshAgent.destination = m_HitInfo.point;
+                    m_TargetCrystal = m_HitInfo.collider.gameObject;
+                }
+                else
+                {
+                    m_TargetCrystal = null;
+                    m_NavMeshAgent.stoppingDistance = 0;
                 }
             }
         }
@@ -132,24 +159,146 @@ public class PlayerBehaviour : MonoBehaviour
         newBullet.rotation = transform.rotation;
     }
 
-    private void CanMoveToggle()
-    {
-        m_CanMove = !m_CanMove;
-    }
+    // private void CanMoveToggle()
+    // {
+    //     m_CanMove = !m_CanMove;
+    // }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag(m_DamageTag))
         {
-            HP -= 10;
+            TakeDmg(20.0f);
+            UpdateHealthBar();
             Destroy(other.gameObject);
         }
     }
 
     private void Mine()
     {
-        m_NavMeshAgent.stoppingDistance = 2.0f;
-        transform.LookAt(m_HitInfo.collider.transform.position);
-        m_NavMeshAgent.destination = m_HitInfo.point;
+        m_HitInfo.collider.GetComponent<CrystalEvents>().GetMined();
     }
+
+    public void GetMinerals(string color)
+    {
+        if (color == "Red")
+        {
+            m_RedCrystals++;
+            if (m_RedCrystals % 2 == 0) m_RedCrystalsInventory++;
+            m_RedCrystalsText.text = m_RedCrystalsInventory.ToString();
+        }
+
+        if (color == "Green")
+        {
+            m_GreenCrystals++;
+            if (m_GreenCrystals % 2 == 0) m_GreenCrystalsInventory++;
+            m_GreenCrystalsText.text = m_GreenCrystalsInventory.ToString();
+        }
+
+        if (color == "Yellow")
+        {
+            m_YellowCrystals++;
+            if (m_YellowCrystals % 2 == 0) m_YellowCrystalsInventory++;
+            m_YellowCrystalsText.text = m_YellowCrystalsInventory.ToString();
+        }
+
+        if (color == "Blue")
+        {
+            m_BlueCrystals++;
+            if (m_BlueCrystals % 2 == 0) m_BlueCrystalsInventory++;
+            m_BlueCrystalsText.text = m_BlueCrystalsInventory.ToString();
+        }
+
+        ChangeSpellState();
+    }
+
+    private void ChangeSpellState()
+    {
+        if (m_GreenCrystalsInventory > 100)
+        {
+            Color currentColor = m_GreenCrystalImage.color;
+            currentColor.a = 1.0f;
+            m_GreenCrystalImage.color = currentColor;
+        }
+        else
+        {
+            Color currentColor = m_GreenCrystalImage.color;
+            currentColor.a = 0.2f;
+            m_GreenCrystalImage.color = currentColor;
+        }
+        
+        if (m_RedCrystalsInventory > 100)
+        {
+            Color currentColor = m_RedCrystalImage.color;
+            currentColor.a = 1.0f;
+            m_RedCrystalImage.color = currentColor;
+        }
+        else
+        {
+            Color currentColor = m_RedCrystalImage.color;
+            currentColor.a = 0.2f;
+            m_RedCrystalImage.color = currentColor;
+        }
+        
+        if (m_YellowCrystalsInventory > 100)
+        {
+            Color currentColor = m_YellowCrystalImage.color;
+            currentColor.a = 1.0f;
+            m_YellowCrystalImage.color = currentColor;
+        }
+        else
+        {
+            Color currentColor = m_YellowCrystalImage.color;
+            currentColor.a = 0.2f;
+            m_YellowCrystalImage.color = currentColor;
+        }
+        
+        if (m_BlueCrystalsInventory > 100)
+        {
+            Color currentColor = m_BlueCrystalImage.color;
+            currentColor.a = 1.0f;
+            m_BlueCrystalImage.color = currentColor;
+        }
+        else
+        {
+            Color currentColor = m_BlueCrystalImage.color;
+            currentColor.a = 0.2f;
+            m_BlueCrystalImage.color = currentColor;
+        }
+    }
+
+    private void UpdateHealthBar()
+    {
+        m_HealthBar.value = HP / 100;
+    }
+
+    private void GreenSpell()
+    {
+        HP += 30.0f;
+        if (HP >= 100)
+        {
+            HP = 100;
+        }
+        m_GreenCrystalsInventory -= 100;
+        m_GreenCrystalsText.text = m_GreenCrystalsInventory.ToString();
+        ChangeSpellState();
+        UpdateHealthBar();
+    }
+
+    public void TakeDmg(float damage)
+    {
+        HP -= damage;
+        if (HP <= 0)
+        {
+            Death();
+        }
+    }
+    
+    private void Death()
+    {
+        HP = 0;
+    }
+
+
+
 }
