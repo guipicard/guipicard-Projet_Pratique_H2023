@@ -12,6 +12,8 @@ public class CrystalsBehaviour : MonoBehaviour
     [SerializeField] private float m_Bounds;
     [SerializeField] private float m_crystalsHeight;
     [SerializeField] private GameObject m_AiPrefab;
+    [SerializeField] private string m_AiTag;
+    [SerializeField] private int m_AiByCrystals;
 
     public List<Vector2> m_CrystalsPosition;
     public List<Vector2> m_PotentialPosition;
@@ -44,7 +46,10 @@ public class CrystalsBehaviour : MonoBehaviour
         if (m_Elapsed == 0.1f)
         {
             Multiply();
-            SpawnAi();
+            if (m_AiAlive < (m_ActiveCrystals / m_AiByCrystals) + 1 && m_ActiveCrystals > m_AiByCrystals)
+            {
+                SpawnAi();
+            }
         }
 
         m_Elapsed += Time.deltaTime;
@@ -62,6 +67,9 @@ public class CrystalsBehaviour : MonoBehaviour
             Vector3 crystalPos = crystal.transform.position;
             m_CrystalsPosition.Add(new Vector2(crystalPos.x, crystalPos.z));
         }
+
+        m_AiAlive = GameObject.FindGameObjectsWithTag(m_AiTag).Length;
+        m_ActiveCrystals = m_CrystalsPosition.Count();
         // Add All Potential Places a new Crystal could be
         for (int i = m_CrystalsPosition.Count - 1; i >= 0; i--)
         {
@@ -104,9 +112,9 @@ public class CrystalsBehaviour : MonoBehaviour
                 {
                     if (m_HitInfo.collider.gameObject.layer == 6)
                     {
-                        // m_HitInfo.collider.gameObject.GetComponent<CrystalsBehaviour>().m_CrystalsPosition.Remove(new Vector2(m_HitInfo.collider.transform.position.x, m_HitInfo.collider.transform.position.z));
                         Destroy(m_HitInfo.collider.gameObject);
                     }
+
                     GameObject newCrystal = Instantiate(m_CrystalObject);
                     newCrystal.transform.position = new Vector3(pos.x, m_crystalsHeight, pos.y);
                     newCrystal.transform.rotation = Quaternion.identity;
@@ -116,22 +124,17 @@ public class CrystalsBehaviour : MonoBehaviour
         }
 
         // Empty Lists
-        
         m_PotentialPosition = new List<Vector2>();
     }
 
     private void SpawnAi()
     {
-        m_ActiveCrystals = m_CrystalsPosition.Count();
-        if (m_AiAlive < m_ActiveCrystals / 20)
-        {
-            m_AiAlive++;
-            Vector2 lastCrystal = m_CrystalsPosition[Random.Range(0, m_ActiveCrystals)];
-            GameObject newAi = Instantiate(m_AiPrefab);
-            newAi.transform.position = new Vector3(lastCrystal.x, m_crystalsHeight, lastCrystal.y);
-            newAi.transform.rotation = Quaternion.identity;
-            newAi.transform.parent = transform;
-        }
+        Vector2 lastCrystal = m_CrystalsPosition[Random.Range(0, m_ActiveCrystals)];
+        GameObject newAi = Instantiate(m_AiPrefab);
+        newAi.transform.position = new Vector3(lastCrystal.x, m_crystalsHeight, lastCrystal.y);
+        newAi.transform.rotation = Quaternion.identity;
+        newAi.transform.parent = transform;
+
         m_CrystalsPosition = new List<Vector2>();
     }
 }

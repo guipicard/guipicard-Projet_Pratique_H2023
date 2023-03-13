@@ -4,11 +4,14 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.PlayerLoop;
 using UnityEngine.ProBuilder.MeshOperations;
+using UnityEngine.UI;
 
 public class AiBehaviour : MonoBehaviour
 {
     public float HP = 100;
 
+    private Camera m_MainCamera;
+    
     private GameObject player;
     [SerializeField] private Transform m_Bullet;
     [SerializeField] private Transform m_BulletSpawner;
@@ -23,6 +26,9 @@ public class AiBehaviour : MonoBehaviour
     private bool m_IsStabbing;
     private bool m_OutOfRange;
 
+    [SerializeField] private Canvas m_AiCanvas;
+    [SerializeField] private Slider m_HealthBar;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +37,8 @@ public class AiBehaviour : MonoBehaviour
         m_Animator = GetComponent<Animator>();
         m_IsStabbing = false;
         m_OutOfRange = true;
+        m_HealthBar.value = HP / 100;
+        m_MainCamera = Camera.main;
     }
 
     // Update is called once per frame
@@ -42,6 +50,9 @@ public class AiBehaviour : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
+        m_AiCanvas.transform.rotation = player.GetComponent<PlayerBehaviour>().m_PlayerCanvas.transform.rotation;
+        
     }
 
     private void StateToggler()
@@ -117,7 +128,8 @@ public class AiBehaviour : MonoBehaviour
     {
         if (other.gameObject.CompareTag(m_DamageTag))
         {
-            HP -= 100;
+            HP -= 25;
+            m_HealthBar.value = HP / 100;
             transform.parent.GetComponent<CrystalsBehaviour>().m_AiAlive--;
             if (HP > 0)
             {

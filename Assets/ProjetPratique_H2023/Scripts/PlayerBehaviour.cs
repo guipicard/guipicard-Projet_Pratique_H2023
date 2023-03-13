@@ -48,7 +48,7 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private Image m_YellowCrystalImage;
     [SerializeField] private Image m_GreenCrystalImage;
 
-    [SerializeField] private Canvas m_PlayerCanvas;
+    [SerializeField] public Canvas m_PlayerCanvas;
     [SerializeField] private Slider m_HealthBar;
 
     void Start()
@@ -86,7 +86,7 @@ public class PlayerBehaviour : MonoBehaviour
         Animate();
         if (m_TargetCrystal != null)
         {
-            if (Vector3.Distance(transform.position, m_TargetCrystal.transform.position) <= 2.1f)
+            if (Vector3.Distance(transform.position, m_TargetCrystal.transform.position) <= 2.5f)
             {
                 Mine();
             }
@@ -113,21 +113,20 @@ public class PlayerBehaviour : MonoBehaviour
             m_MouseRay = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(m_MouseRay, out m_HitInfo))
             {
-                if (m_HitInfo.collider.CompareTag("Enemy"))
+                transform.LookAt(m_HitInfo.point);
+                if (m_HitInfo.collider.gameObject.layer == 7)
                 {
                     Attack();
                 }
 
                 if (m_HitInfo.collider.CompareTag("Ground"))
                 {
-                    transform.LookAt(m_HitInfo.point);
                     m_NavMeshAgent.destination = m_HitInfo.point;
                 }
 
                 if (m_HitInfo.collider.gameObject.layer == 6)
                 {
                     m_NavMeshAgent.stoppingDistance = 2.0f;
-                    transform.LookAt(m_HitInfo.collider.transform.position);
                     m_NavMeshAgent.destination = m_HitInfo.point;
                     m_TargetCrystal = m_HitInfo.collider.gameObject;
                 }
@@ -298,7 +297,4 @@ public class PlayerBehaviour : MonoBehaviour
     {
         HP = 0;
     }
-
-
-
 }

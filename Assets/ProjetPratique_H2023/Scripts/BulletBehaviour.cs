@@ -29,15 +29,4 @@ public class BulletBehaviour : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    // private void OnTriggerEnter(Collider other)
-    // {
-    //     if (other.gameObject.CompareTag(m_DamageTag))
-    //     {
-    //         other.gameObject.GetComponent<AiBehaviour>().HP -= 10;
-    //         Destroy(gameObject);
-    //         
-    //         Debug.Log(other.gameObject.GetComponent<AiBehaviour>().HP);
-    //     }
-    // }
 }
