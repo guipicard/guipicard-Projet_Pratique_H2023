@@ -86,21 +86,42 @@
      <Compile Include="Assets\ProjetPratique_H2023\Scripts\CrystalsBehaviour.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
+     <Compile Include="Assets\ProjetPratique_H2023\Scripts\CrystalPartsDestroyer.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
-     <Compile Include="Assets\ProjetPratique_H2023\Scripts\CrystalPartsDestroyer.cs" />
+     <Compile Include="Assets\Mini UI\Script\ItemDescription.cs" />
+     <Compile Include="Assets\Mini UI\Script\Notification.cs" />
+     <Compile Include="Assets\Mini UI\Script\ViewSelector.cs" />
+     <Compile Include="Assets\Mini UI\Script\LoadingScript.cs" />
+     <Compile Include="Assets\Mini UI\Script\StartScript.cs" />
+     <Compile Include="Assets\Mini UI\Script\CloseButton.cs" />
+     <Compile Include="Assets\Mini UI\Script\Store_Controller.cs" />
+     <Compile Include="Assets\Mini UI\Script\TextPressed.cs" />
+     <Compile Include="Assets\Mini UI\Script\SlideAnimation.cs" />
+     <Compile Include="Assets\Mini UI\Script\Menus.cs" />
+     <Compile Include="Assets\Mini UI\Script\AddFriendScript.cs" />
+     <Compile Include="Assets\Mini UI\Script\CustomButton.cs" />
+     <Compile Include="Assets\Mini UI\Script\ItemDescriptionShow.cs" />
+     <Compile Include="Assets\Mini UI\Script\Switch_Slide.cs" />
+     <Compile Include="Assets\Mini UI\Script\ProgressBarScript.cs" />
+     <Compile Include="Assets\Mini UI\Script\Map.cs" />
+     <Compile Include="Assets\Mini UI\Script\ItemDescriptionCloseButton.cs" />
+     <Compile Include="Assets\Mini UI\Script\OnOff.cs" />
+     <None Include="Assets\TerrainSampleAssets\ThirdPartyNotices.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
+     <None Include="Assets\BOXOPHOBIC\Skybox Cubemap Extended\Core\Shaders\Skybox Cubemap Extended.shader" />
      <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Oswald-Bold - OFL.txt" />
      <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Anton OFL.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
+     <None Include="Assets\BOXOPHOBIC\Skybox Cubemap Extended\Core\Shaders\Skybox Cubemap Blend.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
      <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
@@ -771,8 +792,26 @@
  <Reference Include="Unity.RenderPipelines.Core.Editor">
  <HintPath>C:/Users/guill/Desktop/School/Session2/Pratique/Clone/guipicard-Projet_Pratique_H2023/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
  </Reference>
+ <Reference Include="Unity.TerrainTools">
+ <HintPath>C:/Users/guill/Desktop/School/Session2/Pratique/Clone/guipicard-Projet_Pratique_H2023/Library/ScriptAssemblies/Unity.TerrainTools.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.TerrainTools.Editor">
+ <HintPath>C:/Users/guill/Desktop/School/Session2/Pratique/Clone/guipicard-Projet_Pratique_H2023/Library/ScriptAssemblies/Unity.TerrainTools.Editor.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Boxophobic.SkyboxCubemapExtended.Editor.csproj">
+      <Project>{5c178e6e-2ec7-20e3-02e2-09037f110374}</Project>
+      <Name>Boxophobic.SkyboxCubemapExtended.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Boxophobic.Utils.Editor.csproj">
+      <Project>{46b7aecc-d467-4258-b85c-274bd92adc3d}</Project>
+      <Name>Boxophobic.Utils.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Boxophobic.Utils.Scripts.csproj">
+      <Project>{aac36baf-46ab-bc08-c287-6ae26efbc535}</Project>
+      <Name>Boxophobic.Utils.Scripts</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
