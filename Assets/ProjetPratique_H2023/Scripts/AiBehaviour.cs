@@ -39,6 +39,7 @@ public class AiBehaviour : MonoBehaviour
         m_OutOfRange = true;
         m_HealthBar.value = HP / 100;
         m_MainCamera = Camera.main;
+        transform.parent.GetComponent<CrystalsBehaviour>().m_AiAlive++;
     }
 
     // Update is called once per frame
@@ -48,6 +49,7 @@ public class AiBehaviour : MonoBehaviour
         StateToggler();
         if (HP <= 0)
         {
+            transform.parent.GetComponent<CrystalsBehaviour>().m_AiAlive--;
             Destroy(gameObject);
         }
         
@@ -130,7 +132,6 @@ public class AiBehaviour : MonoBehaviour
         {
             HP -= 25;
             m_HealthBar.value = HP / 100;
-            transform.parent.GetComponent<CrystalsBehaviour>().m_AiAlive--;
             if (HP > 0)
             {
                 Destroy(other.gameObject);

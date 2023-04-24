@@ -16,7 +16,6 @@ public class CrystalEvents : MonoBehaviour
 
     public void GetMined()
     {
-        m_CrystalsBehaviour.m_CrystalsPosition.Remove(new Vector2(transform.position.x, transform.position.z));
         Instantiate(m_CrystalParts, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }

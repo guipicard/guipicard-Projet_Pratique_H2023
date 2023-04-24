@@ -5,93 +5,108 @@ using UnityEngine;
 
 public class CrystalsBehaviour : MonoBehaviour
 {
-    [SerializeField] private GameObject m_CrystalObject;
-    [SerializeField] private string m_CrystalTag;
-    [SerializeField] private float m_MuliplieCooldown;
-    [SerializeField] private float m_CrystalSpacing;
-    [SerializeField] private float m_Bounds;
-    [SerializeField] private float m_crystalsHeight;
-    [SerializeField] private GameObject m_AiPrefab;
-    [SerializeField] private string m_AiTag;
-    [SerializeField] private int m_AiByCrystals;
+    [SerializeField] private CrystalData m_CrystalsData;
+    [SerializeField] private string m_CrystalName;
+    private CrystalData.CrystalType m_CrystalType;
 
     public List<Vector2> m_CrystalsPosition;
     public List<Vector2> m_PotentialPosition;
+    public List<Vector2> m_LastCrystalWave;
 
     private float m_Elapsed;
     private Ray m_Ray;
     private RaycastHit m_HitInfo;
     public int m_AiAlive;
-    private int m_ActiveCrystals;
+
 
     void Start()
     {
+        foreach (var type in m_CrystalsData.crystalTypes)
+        {
+            if (type.name == m_CrystalName)
+            {
+                m_CrystalType = type;
+            }
+        }
+
         m_AiAlive = 0;
         m_Elapsed = 0;
 
         m_PotentialPosition = new List<Vector2>();
         m_CrystalsPosition = new List<Vector2>();
         // Add All Present Crystals Positions in List "CrystalsPosition"
-        foreach (var crystal in GameObject.FindGameObjectsWithTag(m_CrystalTag))
-        {
-            Vector3 crystalPos = crystal.transform.position;
-            m_CrystalsPosition.Add(new Vector2(crystalPos.x, crystalPos.z));
-        }
-
+        FillCrystalList();
+        m_LastCrystalWave = m_CrystalsPosition;
         SpawnAi();
     }
 
     void Update()
     {
-        if (m_Elapsed == 0.1f)
+        CrystalDuplicationLoop();
+    }
+
+    private void CrystalDuplicationLoop()
+    {
+        m_Elapsed += Time.deltaTime;
+        if (m_Elapsed > m_CrystalType.spawnTimer)
         {
+            FillCrystalList();
+            GetNewPositions();
             Multiply();
-            if (m_AiAlive < (m_ActiveCrystals / m_AiByCrystals) + 1 && m_ActiveCrystals > m_AiByCrystals)
+            if (m_AiAlive < (m_CrystalsPosition.Count / m_CrystalType.aiByCrystals) + 1 &&
+                m_CrystalsPosition.Count > m_CrystalType.aiByCrystals)
             {
                 SpawnAi();
             }
+            
+            // Reset Lists
+            m_PotentialPosition = new List<Vector2>();
+            m_CrystalsPosition = new List<Vector2>();
+            m_LastCrystalWave = new List<Vector2>();
+            
+            m_Elapsed = 0;
         }
+        
+    }
 
-        m_Elapsed += Time.deltaTime;
-        if (m_Elapsed > m_MuliplieCooldown)
+    private void FillCrystalList()
+    {
+        foreach (Transform crystal in transform)
         {
-            GetNewPositions();
-            m_Elapsed = 0.1f;
+            if (crystal.CompareTag(m_CrystalType.crystalMineral.tag))
+            {
+                m_CrystalsPosition.Add(new Vector2(crystal.position.x, crystal.position.z));
+            }
         }
     }
 
     private void GetNewPositions()
     {
-        foreach (var crystal in GameObject.FindGameObjectsWithTag(m_CrystalTag))
-        {
-            Vector3 crystalPos = crystal.transform.position;
-            m_CrystalsPosition.Add(new Vector2(crystalPos.x, crystalPos.z));
-        }
-
-        m_AiAlive = GameObject.FindGameObjectsWithTag(m_AiTag).Length;
-        m_ActiveCrystals = m_CrystalsPosition.Count();
         // Add All Potential Places a new Crystal could be
         for (int i = m_CrystalsPosition.Count - 1; i >= 0; i--)
         {
             Vector2 currentCrystal = m_CrystalsPosition[i];
+            float CrystalSpacing = m_CrystalsData.spaceBetween;
+            Vector2[] surroundingPlacings =
+            {
+                currentCrystal + new Vector2(m_CrystalsData.spaceBetween, m_CrystalsData.spaceBetween),
+                currentCrystal + new Vector2(-m_CrystalsData.spaceBetween, m_CrystalsData.spaceBetween),
+                currentCrystal + new Vector2(m_CrystalsData.spaceBetween, -m_CrystalsData.spaceBetween),
+                currentCrystal + new Vector2(-m_CrystalsData.spaceBetween, -m_CrystalsData.spaceBetween)
+            };
 
-            Vector2 pos1 = currentCrystal + new Vector2(m_CrystalSpacing, m_CrystalSpacing);
-            Vector2 pos2 = currentCrystal + new Vector2(-m_CrystalSpacing, m_CrystalSpacing);
-            Vector2 pos3 = currentCrystal + new Vector2(m_CrystalSpacing, -m_CrystalSpacing);
-            Vector2 pos4 = currentCrystal + new Vector2(-m_CrystalSpacing, -m_CrystalSpacing);
-
-            Vector2[] surroundingPlacings = { pos1, pos2, pos3, pos4 };
             for (int j = surroundingPlacings.Length - 1; j >= 0; j--)
             {
-                Vector2 pos = surroundingPlacings[j];
-                if (!m_CrystalsPosition.Contains(pos) && !m_PotentialPosition.Contains(pos))
+                if (!m_PotentialPosition.Contains(surroundingPlacings[j]))
                 {
-                    m_Ray = new Ray(new Vector3(pos.x, m_crystalsHeight + 2.0f, pos.y), Vector3.down);
+                    m_Ray = new Ray(
+                        new Vector3(surroundingPlacings[j].x, m_CrystalsData.crystalHeight + 2.0f,
+                            surroundingPlacings[j].y), Vector3.down);
                     if (Physics.Raycast(m_Ray, out m_HitInfo, Mathf.Infinity))
                     {
                         if (m_HitInfo.collider.CompareTag("Ground") || m_HitInfo.collider.gameObject.layer == 6)
                         {
-                            m_PotentialPosition.Add(pos);
+                            m_PotentialPosition.Add(surroundingPlacings[j]);
                         }
                     }
                 }
@@ -102,39 +117,30 @@ public class CrystalsBehaviour : MonoBehaviour
     private void Multiply()
     {
         // Create New Crystals
-        foreach (var pos in m_PotentialPosition)
+        foreach (Vector2 pos in m_PotentialPosition)
         {
             int chances = Random.Range(0, 5);
-            if (chances == 1)
-            {
-                m_Ray = new Ray(new Vector3(pos.x, m_crystalsHeight + 2.0f, pos.y), Vector3.down);
-                if (Physics.Raycast(m_Ray, out m_HitInfo, Mathf.Infinity))
-                {
-                    if (m_HitInfo.collider.gameObject.layer == 6)
-                    {
-                        Destroy(m_HitInfo.collider.gameObject);
-                    }
 
-                    GameObject newCrystal = Instantiate(m_CrystalObject);
-                    newCrystal.transform.position = new Vector3(pos.x, m_crystalsHeight, pos.y);
-                    newCrystal.transform.rotation = Quaternion.identity;
-                    newCrystal.transform.parent = transform;
+            m_Ray = new Ray(new Vector3(pos.x, m_CrystalsData.crystalHeight + 2.0f, pos.y), Vector3.down);
+            bool myRaycast = Physics.Raycast(m_Ray, out m_HitInfo, Mathf.Infinity);
+            if (chances == 1 && myRaycast)
+            {
+                if (m_HitInfo.collider.gameObject.layer == 6)
+                {
+                    Destroy(m_HitInfo.collider.gameObject);
                 }
+                m_LastCrystalWave.Add(pos);
+                Vector3 newCrystalPosition = new Vector3(pos.x, m_CrystalsData.crystalHeight, pos.y);
+                Instantiate(m_CrystalType.crystalMineral, newCrystalPosition, Quaternion.identity, transform);
             }
         }
-
-        // Empty Lists
-        m_PotentialPosition = new List<Vector2>();
     }
-
+    
     private void SpawnAi()
     {
-        Vector2 lastCrystal = m_CrystalsPosition[Random.Range(0, m_ActiveCrystals)];
-        GameObject newAi = Instantiate(m_AiPrefab);
-        newAi.transform.position = new Vector3(lastCrystal.x, m_crystalsHeight, lastCrystal.y);
-        newAi.transform.rotation = Quaternion.identity;
-        newAi.transform.parent = transform;
-
-        m_CrystalsPosition = new List<Vector2>();
+        int spawnPointCrystalIndex = Random.Range(0, m_LastCrystalWave.Count);
+        Vector2 spawnPointCrystal = m_LastCrystalWave[spawnPointCrystalIndex];
+        Vector3 newAiPosition = new Vector3(spawnPointCrystal.x, m_CrystalsData.crystalHeight, spawnPointCrystal.y);
+        Instantiate(m_CrystalType.aiPrefab, newAiPosition, Quaternion.identity, transform);
     }
 }
